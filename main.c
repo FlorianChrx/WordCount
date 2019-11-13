@@ -29,13 +29,7 @@ int main(int argc, char* argv[]){
 	  return -1;
 	}
       }
-      //cas ou l'argument est un mot
-    } /* else {
-      if(i != argc - 1) {
-	printf("bad use\n");
-	return -1;
-      }
-      } */
+    }
   }
   
   if(c+w+l == 0) {
@@ -45,25 +39,69 @@ int main(int argc, char* argv[]){
   }
     
   //------------------------------ EXECUTION ----------------------------
+  int tnc = 0;
+  int tnw = 0;
+  int tnl = 0;
 
-  printf("on le fait ma couille %d%d%d\n", c, w, l);
+  int fpresent = 0;
 
-  for(int i = 1; i < argc; i++){
+  for(int i = 1; i < argc; i++){ 
     if(argv[i][0] != '-'){
+      fpresent++;
       int f = open(argv[i],O_RDONLY);
       int nc = 0;
       int nw = 0;
       int nl = 0;
-      traiter(f,&nc,&nw,&nl);
-      if(c == 1){
-	printf("caracteres: %d ",nc);
+      int success = traiter(f,&nc,&nw,&nl);
+      if (success < 0) {
+	perror(argv[i]);
+      } else {
+	printf("%s --- ",argv[i]);
+	if(c == 1){
+	  printf("caracteres: %d ",nc);
+	}
+	if(w == 1){
+	  printf("mots: %d ",nw);
+	}
+	if(l == 1){
+	  printf("lignes: %d ",nl);
+	}
+	printf("\n");
+	tnc += nc;
+	tnw += nw;
+	tnl += nl;
       }
-      if(w == 1){
-	printf("mots: %d ",nw);
-      }
-      if(l == 1){
-	printf("lignes: %d ",nl);
-      }
+    }
+  }
+
+  if(fpresent == 0){
+    int nc = 0;
+    int nw = 0;
+    int nl = 0;
+    traiter(0,&nc,&nw,&nl);
+    printf("Standard --- ");
+    if(c == 1){
+      printf("caracteres: %d ",nc);
+    }
+    if(w == 1){
+      printf("mots: %d ",nw);
+    }
+    if(l == 1){
+      printf("lignes: %d ",nl);
+    }
+    printf("\n");
+  }
+  
+  if(fpresent > 1) {
+    printf("TOTAL --- ");
+    if(c == 1){
+      printf("caracteres: %d ",tnc);
+    }
+    if(w == 1){
+      printf("mots: %d ",tnw);
+    }
+    if(l == 1){
+      printf("lignes: %d \n",tnl);
     }
   }
   return 0;

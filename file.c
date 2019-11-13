@@ -13,6 +13,7 @@ int traiter(int f, int* c, int* mot, int* lig){
   *c = 0;
   *mot = 0;
   *lig = 0;
+  int old = 0;
 
   //première lecture
   rsread = read(f, str, TAILLE);
@@ -28,14 +29,15 @@ int traiter(int f, int* c, int* mot, int* lig){
 
     //on demarre le parcours du buffer
     for(int i = 0; i < rsread; ++i){
-      //si le caractère lu est un espace on ajoute un mot
-      //ATTENTION A NE PAS OUBLIER D'EN AJOUTER UN APRES TRAITEMENT #1
-      //car nbMots = nbEspaces + 1
-      if(isspace(c[i])) (*mot)++;
-      if(c[i]=='\n') (*lig)++;
+      if(!isspace(str[i]) && old == 0){
+	(*mot)++;
+	old = 1;
+      } else if (isspace(str[i])) {
+	old = 0;
+      }
+      if(str[i]=='\n') (*lig)++;
     }
     rsread = read(f, str, TAILLE);
   }
-  (*mot)++;
   return 0;
 }
